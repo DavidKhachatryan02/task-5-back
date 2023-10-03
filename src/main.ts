@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
 async function start() {
-  const PORT = process.env.PORT || 3000;
+  const APP_PORT = process.env.PORT || 3000;
   try {
     const app = await NestFactory.create(AppModule, { cors: true });
     app.useGlobalPipes(
@@ -13,11 +13,13 @@ async function start() {
         transform: true,
       }),
     );
-    await app.listen(PORT, () =>
-      console.log(`Server started on port = ${PORT}`),
+    await app.listen(APP_PORT, () =>
+      console.log(
+        ` [server]: Server is running at http://localhost:${APP_PORT}`,
+      ),
     );
   } catch (e) {
-    console.log('[APP ERROR] =>', e);
+    console.error(`[server]: Error on initializing server => ${e}`);
   }
 }
 
