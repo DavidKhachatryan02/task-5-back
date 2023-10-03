@@ -1,9 +1,19 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 
-async function start() {
-  const APP_PORT = process.env.PORT || 3000;
+// import Transport from '@nestjs/microservices';
+// {
+//   transport: Transport.KAFKA,
+//   options: {
+//     client: {
+//       brokers: ['localhost:9092'],
+//     }
+//   }
+
+const APP_PORT = process.env.PORT || 3000;
+
+async function main() {
   try {
     const app = await NestFactory.create(AppModule, { cors: true });
     app.useGlobalPipes(
@@ -23,4 +33,4 @@ async function start() {
   }
 }
 
-start();
+main().then();
