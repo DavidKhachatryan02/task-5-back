@@ -9,9 +9,8 @@ import { KAFKA_CONFIG } from 'src/constants/config';
 @Injectable()
 export class ProducerService implements OnModuleInit, OnApplicationShutdown {
   private readonly kafka = new Kafka(KAFKA_CONFIG);
-  admin = this.kafka.admin();
 
-  producer: Producer = this.kafka.producer();
+  private readonly producer: Producer = this.kafka.producer();
 
   async onModuleInit() {
     await this.producer.connect();
