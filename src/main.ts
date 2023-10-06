@@ -2,15 +2,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-// import Transport from '@nestjs/microservices';
-// {
-//   transport: Transport.KAFKA,
-//   options: {
-//     client: {
-//       brokers: ['localhost:9092'],
-//     }
-//   }
-
 const APP_PORT = process.env.PORT || 3000;
 
 async function main() {
