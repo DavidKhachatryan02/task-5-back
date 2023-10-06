@@ -14,7 +14,6 @@ export class ConsumerService
   }
 
   onApplicationBootstrap() {}
-  // Connect to Kafka Server
   private readonly kafka = new Kafka({
     clientId: 'user',
     brokers: ['localhost:9092'],
