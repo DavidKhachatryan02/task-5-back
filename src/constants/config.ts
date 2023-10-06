@@ -12,4 +12,4 @@ export const KAFKA_CONFIG = {
   brokers: ['localhost:9092'],
 };
 
-export const GROUPID = { groupId: '1' };
+export const GROUPID = { groupId: 'emails' };

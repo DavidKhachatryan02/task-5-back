@@ -6,7 +6,9 @@ import { KafkaModule } from './kafka/kafka.module';
 @Module({
   imports: [
     AuthModule,
-    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     KafkaModule,
   ],
 })
