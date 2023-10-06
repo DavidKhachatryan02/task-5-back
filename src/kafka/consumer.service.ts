@@ -3,7 +3,8 @@ import {
   OnApplicationBootstrap,
   OnApplicationShutdown,
 } from '@nestjs/common';
-import { ConsumerSubscribeTopics, Kafka } from 'kafkajs';
+import { Kafka } from 'kafkajs';
+import { CONSUMER_CONFIG, KAFKA_CONFIG, GROUPID } from 'src/constants/config';
 
 @Injectable()
 export class ConsumerService
@@ -13,25 +14,20 @@ export class ConsumerService
     await this.consumer.disconnect();
   }
 
-  onApplicationBootstrap() {}
-  private readonly kafka = new Kafka({
-    clientId: 'user',
-    brokers: ['localhost:9092'],
-  });
-
-  consumer = this.kafka.consumer({ groupId: '1' });
-
-  async connect(topics: ConsumerSubscribeTopics) {
+  async onApplicationBootstrap() {
     await this.consumer.connect();
     console.log('CONSUMER CONNECTRED');
-    await this.consumer.subscribe(topics);
+    await this.consumer.subscribe(CONSUMER_CONFIG);
     console.log('CONSUMER subsribed');
   }
+  private readonly kafka = new Kafka(KAFKA_CONFIG);
+
+  consumer = this.kafka.consumer(GROUPID);
 
   async run() {
     await this.consumer.run({
       eachMessage: async (result) => {
-        console.log('MESSANGE', result.message.value.toString());
+        console.log('MESSANGE', result.message.key.toString());
       },
     });
   }

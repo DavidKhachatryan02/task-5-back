@@ -9,11 +9,6 @@ import { KafkaConnectController } from './kafkaConnect.controller';
 @Module({
   providers: [ProducerService, ConsumerService, KafkaConnect, KafkaService],
   controllers: [KafkaSendController, KafkaConnectController],
-  exports: [
-    ProducerService,
-    ConsumerService,
-    KafkaConnect,
-    KafkaSendController,
-  ],
+  exports: [ProducerService, ConsumerService, KafkaConnect, KafkaService],
 })
 export class KafkaModule {}

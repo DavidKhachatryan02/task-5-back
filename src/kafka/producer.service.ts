@@ -4,27 +4,17 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { Kafka, Producer, ProducerRecord } from 'kafkajs';
+import { KAFKA_CONFIG } from 'src/constants/config';
 
 @Injectable()
 export class ProducerService implements OnModuleInit, OnApplicationShutdown {
-  private readonly kafka = new Kafka({
-    clientId: 'user',
-    brokers: ['localhost:9092'],
-  });
+  private readonly kafka = new Kafka(KAFKA_CONFIG);
   admin = this.kafka.admin();
 
   producer: Producer = this.kafka.producer();
 
   async onModuleInit() {
-    await this.admin.connect();
     await this.producer.connect();
-    await this.admin.createTopics({
-      topics: [
-        {
-          topic: 'email',
-        },
-      ],
-    });
   }
 
   async send(message: ProducerRecord) {
@@ -33,6 +23,5 @@ export class ProducerService implements OnModuleInit, OnApplicationShutdown {
 
   async onApplicationShutdown() {
     await this.producer.disconnect();
-    await this.admin.disconnect();
   }
 }
