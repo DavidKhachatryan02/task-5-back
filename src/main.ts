@@ -1,12 +1,20 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 const APP_PORT = process.env.APP_PORT || 3000;
 
 async function main() {
   try {
-    const app = await NestFactory.create(AppModule, { cors: true });
+    const app = await NestFactory.create<NestFastifyApplication>(
+      AppModule,
+      new FastifyAdapter(),
+      { cors: true },
+    );
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,

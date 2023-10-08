@@ -23,8 +23,22 @@ export class ConsumerService
     await this.consumer.subscribe(CONSUMER_CONFIG);
     console.log('CONSUMER subsribed');
     await this.consumer.run({
-      eachMessage: async (result) => {
-        console.log('MESSAGE RECIVED', result.message.key.toString());
+      eachBatchAutoResolve: true,
+      eachBatch: async ({ batch, resolveOffset, heartbeat }) => {
+        for (const message of batch.messages) {
+          console.log({
+            topic: batch.topic,
+            partition: batch.partition,
+            highWatermark: batch.highWatermark,
+            message: {
+              offset: message.offset,
+              key: message.key.toString(),
+              value: message.value.toString(),
+            },
+          });
+          resolveOffset(message.offset);
+          await heartbeat();
+        }
       },
     });
   }

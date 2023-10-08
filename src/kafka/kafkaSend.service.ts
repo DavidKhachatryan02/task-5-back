@@ -9,11 +9,17 @@ export class KafkaService {
   constructor(private readonly producerService: ProducerService) {}
   async SendToQueue(body: createEmailNumberDto) {
     const massages = generateMassages(body.number);
-
     for (let i = 0; i < massages.length; i++) {
+      const partition = Math.random() > 0.5 ? 1 : 0;
       await this.producerService.send({
         topic: TOPICS.EMAIL,
-        messages: [{ key: massages[i].key, value: massages[i].value }],
+        messages: [
+          {
+            key: partition.toString(),
+            value: massages[i].value,
+            partition: partition,
+          },
+        ],
       });
       console.error(`MESSAGE SEND ${massages[i].key} `);
     }
