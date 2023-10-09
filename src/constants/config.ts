@@ -10,6 +10,7 @@ export const CONSUMER_CONFIG: ConsumerSubscribeTopics = {
 export const KAFKA_CONFIG = {
   clientId: 'user',
   brokers: ['localhost:9092'],
+  maxBatchSize: 100,
 };
 
 export const GROUPID = { groupId: 'emails' };

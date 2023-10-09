@@ -23,21 +23,28 @@ export class ConsumerService
     await this.consumer.subscribe(CONSUMER_CONFIG);
     console.log('CONSUMER subsribed');
     await this.consumer.run({
+      autoCommitThreshold: 100,
+      autoCommitInterval: 5000,
+      // eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
+      //   console.log({
+      //     topic,
+      //     partition: partition.toString(),
+      //     value: message.value.toString(),
+      //   });
+      // },
       eachBatchAutoResolve: true,
-      eachBatch: async ({ batch, resolveOffset, heartbeat }) => {
+      eachBatch: async ({ batch, commitOffsetsIfNecessary }) => {
+        console.log(`Got ${batch.messages.length} MESSAGES`);
         for (const message of batch.messages) {
-          console.log({
-            topic: batch.topic,
-            partition: batch.partition,
-            highWatermark: batch.highWatermark,
-            message: {
-              offset: message.offset,
-              key: message.key.toString(),
-              value: message.value.toString(),
-            },
-          });
-          resolveOffset(message.offset);
-          await heartbeat();
+          // console.log({
+          //   topic: batch.topic,
+          //   partition: batch.partition,
+          //   message: {
+          //     offset: message.offset,
+          //     value: message.value.toString(),
+          //   },
+          // });
+          await commitOffsetsIfNecessary();
         }
       },
     });
