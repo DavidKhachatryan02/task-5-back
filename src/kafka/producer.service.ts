@@ -22,7 +22,7 @@ export class ProducerService implements OnModuleInit, OnApplicationShutdown {
   }
 
   async send(messages: ProducerRecord) {
-    await this.producer.sendBatch(messages);
+    await this.producer.send(messages);
   }
 
   async onApplicationShutdown() {

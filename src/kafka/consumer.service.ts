@@ -23,8 +23,6 @@ export class ConsumerService
     await this.consumer.subscribe(CONSUMER_CONFIG);
     console.log('CONSUMER subsribed');
     await this.consumer.run({
-      autoCommitThreshold: 100,
-      autoCommitInterval: 5000,
       // eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
       //   console.log({
       //     topic,
