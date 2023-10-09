@@ -11,7 +11,7 @@ export class ProducerService implements OnModuleInit, OnApplicationShutdown {
   private readonly kafka = new Kafka(KAFKA_CONFIG);
 
   private readonly producer: Producer = this.kafka.producer({
-    createPartitioner: Partitioners.LegacyPartitioner,
+    createPartitioner: Partitioners.DefaultPartitioner,
   });
 
   async onModuleInit() {
