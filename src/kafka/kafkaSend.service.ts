@@ -16,9 +16,8 @@ export class KafkaService {
     for (let i = 0; i < massages.length; i += 100) {
       massagesToSend = massages.slice(i, i + 100);
 
-      await this.producerService.send({
-        topic: TOPICS.EMAIL,
-        messages: [...massagesToSend],
+      await this.producerService.sendBatch({
+        topicMessages: [{ topic: TOPICS.EMAIL, messages: [...massagesToSend] }],
       });
 
       console.error(`MESSAGE SEND ${massagesToSend.length} `);

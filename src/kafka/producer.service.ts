@@ -3,13 +3,8 @@ import {
   OnApplicationShutdown,
   OnModuleInit,
 } from '@nestjs/common';
-import { Kafka, Producer, ProducerRecord } from 'kafkajs';
+import { Kafka, Producer, ProducerBatch } from 'kafkajs';
 import { KAFKA_CONFIG } from 'src/constants/config';
-
-// const partitaner = [
-//   { partitionId: 1, leader: 1 },
-//   { partitionId: 0, leader: 0 },
-// ];
 
 @Injectable()
 export class ProducerService implements OnModuleInit, OnApplicationShutdown {
@@ -21,8 +16,8 @@ export class ProducerService implements OnModuleInit, OnApplicationShutdown {
     await this.producer.connect();
   }
 
-  async send(messages: ProducerRecord) {
-    await this.producer.send(messages);
+  async sendBatch(messages: ProducerBatch) {
+    await this.producer.sendBatch(messages);
   }
 
   async onApplicationShutdown() {
