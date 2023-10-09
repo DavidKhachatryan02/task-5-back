@@ -1,4 +1,4 @@
-import { ConsumerSubscribeTopics } from 'kafkajs';
+import { ConsumerConfig, ConsumerSubscribeTopics, KafkaConfig } from 'kafkajs';
 
 export const TOPICS = { EMAIL: 'email' };
 
@@ -7,9 +7,9 @@ export const CONSUMER_CONFIG: ConsumerSubscribeTopics = {
   fromBeginning: true,
 };
 
-export const KAFKA_CONFIG = {
+export const KAFKA_CONFIG: KafkaConfig = {
   clientId: 'user',
   brokers: ['localhost:9092'],
 };
 
-export const CONSUMER = { groupId: 'emails', maxBytes: 2000 };
+export const CONSUMER: ConsumerConfig = { groupId: 'emails', maxBytes: 2000 };
