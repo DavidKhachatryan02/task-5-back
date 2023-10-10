@@ -1,13 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { KafkaService } from './kafkaSend.service';
 import { createEmailNumberDto } from './dto/emailNumber.dto';
+import { ProducerService } from './producer.service';
 
 @Controller('send')
-export class KafkaSendController {
-  constructor(private readonly kafkaService: KafkaService) {}
+export class KafkaController {
+  constructor(private readonly producerService: ProducerService) {}
 
   @Post()
   async SendToQueue(@Body() body: createEmailNumberDto) {
-    return this.kafkaService.SendToQueue(body);
+    return this.producerService.SendToQueue(body);
   }
 }

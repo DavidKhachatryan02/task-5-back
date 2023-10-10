@@ -14,7 +14,7 @@ export const KAFKA_CONFIG: KafkaConfig = {
   brokers: ['localhost:9092'],
 };
 
-export const CONSUMER: ConsumerConfig = { groupId: 'emails' };
+export const CONSUMER: ConsumerConfig = { groupId: 'emails', maxBytes: 2000 };
 
 export const TYPE_ORM_CONFIG: TypeOrmModuleOptions = {
   type: 'mysql',

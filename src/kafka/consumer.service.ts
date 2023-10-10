@@ -38,4 +38,8 @@ export class ConsumerService
       },
     });
   }
+
+  async getData() {
+    return await this.emailRepository.count();
+  }
 }
