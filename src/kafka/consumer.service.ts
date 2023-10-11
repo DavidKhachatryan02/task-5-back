@@ -28,6 +28,7 @@ export class ConsumerService
   }
 
   async onApplicationBootstrap() {
+    await this.emailRepository.clear(); //!clear this
     await this.consumer.connect();
     await this.consumer.subscribe(CONSUMER_CONFIG);
     await this.consumer.run({
@@ -45,7 +46,10 @@ export class ConsumerService
   }
 
   async getData(startFrom: number) {
-    const emailsReady = startFrom || (await this.emailRepository.count());
+    const numberOfEmail = await this.emailRepository.count();
+    const emailsReady = startFrom > numberOfEmail ? startFrom : numberOfEmail;
+
+    //! NEED TO CHANGE LOGIC HERE
 
     const data = await this.updateQueryBuilder
       .update(Email)
@@ -53,8 +57,11 @@ export class ConsumerService
       .where(`id<=${emailsReady}`)
       .execute();
 
-    return data.affected;
+    return data.affected; //! maybe + emailsReady
   }
+
+  //!FIND OUT IF SULITION IS GOOD
+  //!Logic is, if process is stoped, We will get last id of email send and continue from there
 
   async findLast() {
     const lastEmailSent = await this.emailRepository.findOne({

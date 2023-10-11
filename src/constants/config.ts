@@ -16,6 +16,8 @@ export const KAFKA_CONFIG: KafkaConfig = {
 
 export const CONSUMER: ConsumerConfig = { groupId: 'emails', maxBytes: 2000 };
 
+//! CHNAGE TO PROCESS ENV
+
 export const TYPE_ORM_CONFIG: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
