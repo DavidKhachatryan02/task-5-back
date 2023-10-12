@@ -5,7 +5,6 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-// import { ConfigService } from '@nestjs/config';
 
 export const initApp = async (): Promise<NestFastifyApplication> => {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,7 +20,6 @@ export const initApp = async (): Promise<NestFastifyApplication> => {
     }),
   );
 
-  // app.useLogger(await app.resolve(ConfigService));//!FOR CONFIG
   app.enableShutdownHooks();
 
   return app;
