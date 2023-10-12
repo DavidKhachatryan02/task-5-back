@@ -2,6 +2,8 @@ import { initApp } from './app';
 
 const APP_PORT = process.env.APP_PORT || 3000;
 
+//!! TODO NEED TO CHANGE CONFIG, look true logic, init kafka in different way
+
 async function main() {
   try {
     const app = await initApp();

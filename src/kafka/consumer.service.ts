@@ -102,5 +102,4 @@ export class ConsumerService
       startedFrom: whereStart,
     };
   }
-  //!FIND OUT IF SULITION IS GOOD//
 }
