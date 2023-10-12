@@ -1,4 +1,3 @@
-// import { TOPICS } from 'src/constants/config';
 import { Message } from 'kafkajs';
 
 export const generateMassages = (count: number): Message[] => {
