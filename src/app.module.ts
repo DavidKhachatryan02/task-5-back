@@ -11,6 +11,7 @@ import { TYPE_ORM_CONFIG } from './constants/config';
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env', //!Fix this
     }),
     KafkaModule,
   ],

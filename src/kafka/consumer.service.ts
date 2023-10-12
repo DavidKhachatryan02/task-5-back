@@ -47,7 +47,7 @@ export class ConsumerService
   }
 
   async onApplicationBootstrap() {
-    // await this.emailRepository.clear(); //!clear this
+    // await this.emailRepository.clear(); //!clear this//
     await this.consumer.connect();
     await this.consumer.subscribe(CONSUMER_CONFIG);
     await this.consumer.run({
@@ -102,5 +102,5 @@ export class ConsumerService
       startedFrom: whereStart,
     };
   }
-  //!FIND OUT IF SULITION IS GOOD
+  //!FIND OUT IF SULITION IS GOOD//
 }
