@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { createEmailNumberDto } from './dto/emailNumber.dto';
 import { ProducerService } from './producer.service';
 import { ConsumerService } from './consumer.service';
@@ -15,13 +15,8 @@ export class KafkaController {
     return this.producerService.SendToQueue(body);
   }
 
-  @Get('get/:startFrom')
-  async getData(@Param('startFrom') startFrom: number) {
-    return this.consumerService.getData(startFrom);
-  }
-
-  @Get('findlast')
-  async continue() {
-    return this.consumerService.findLast();
+  @Get('get')
+  async getData() {
+    return this.consumerService.getData();
   }
 }

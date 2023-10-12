@@ -22,6 +22,7 @@ async function main() {
         transform: true,
       }),
     );
+    app.enableShutdownHooks();
     await app.listen(APP_PORT, () =>
       console.log(
         ` [server]: Server is running at http://localhost:${APP_PORT}`,

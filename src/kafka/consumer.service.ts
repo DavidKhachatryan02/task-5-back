@@ -1,6 +1,7 @@
 import {
   Injectable,
   OnApplicationBootstrap,
+  BeforeApplicationShutdown,
   OnApplicationShutdown,
 } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
@@ -11,7 +12,10 @@ import { Email } from 'src/kafka/entity/email.entity';
 
 @Injectable()
 export class ConsumerService
-  implements OnApplicationBootstrap, OnApplicationShutdown
+  implements
+    OnApplicationBootstrap,
+    BeforeApplicationShutdown,
+    OnApplicationShutdown
 {
   constructor(
     @InjectDataSource() private dataSource: DataSource,
@@ -23,12 +27,27 @@ export class ConsumerService
   private readonly updateQueryBuilder: SelectQueryBuilder<Email> =
     this.entitiyManager.createQueryBuilder();
 
+  async beforeApplicationShutdown() {
+    const lastEmailSent = await this.emailRepository.findOne({
+      where: { isSend: true },
+      order: { id: 'DESC' },
+    });
+    if (!lastEmailSent) return;
+
+    await this.updateQueryBuilder
+      .update(Email)
+      .set({ isStoped: true })
+      .where(`id=${lastEmailSent.id}`)
+      .execute();
+  }
+
   async onApplicationShutdown() {
+    await this.consumer.stop();
     await this.consumer.disconnect();
   }
 
   async onApplicationBootstrap() {
-    await this.emailRepository.clear(); //!clear this
+    // await this.emailRepository.clear(); //!clear this
     await this.consumer.connect();
     await this.consumer.subscribe(CONSUMER_CONFIG);
     await this.consumer.run({
@@ -45,30 +64,43 @@ export class ConsumerService
     });
   }
 
-  async getData(startFrom: number) {
+  async getData() {
     const numberOfEmail = await this.emailRepository.count();
-    const emailsReady = startFrom > numberOfEmail ? startFrom : numberOfEmail;
 
-    //! NEED TO CHANGE LOGIC HERE
-
-    const data = await this.updateQueryBuilder
-      .update(Email)
-      .set({ isSend: true })
-      .where(`id<=${emailsReady}`)
-      .execute();
-
-    return data.affected; //! maybe + emailsReady
-  }
-
-  //!FIND OUT IF SULITION IS GOOD
-  //!Logic is, if process is stoped, We will get last id of email send and continue from there
-
-  async findLast() {
-    const lastEmailSent = await this.emailRepository.findOne({
-      where: { isSend: true },
-      order: { id: 'DESC' },
+    let whereStart = await this.emailRepository.findOne({
+      where: { isSend: false },
     });
 
-    return lastEmailSent;
+    const whereStoped = await this.emailRepository.findOne({
+      where: { isStoped: true },
+    });
+
+    if (whereStoped) {
+      await this.updateQueryBuilder
+        .update(Email)
+        .set({ isStoped: null })
+        .where(`id=${whereStoped.id}`)
+        .execute();
+
+      whereStart = whereStoped;
+    }
+
+    if (!whereStart) return { done: numberOfEmail };
+
+    const data = await this.updateQueryBuilder
+      .skip(whereStart.id)
+      .take(numberOfEmail - whereStart.id)
+      .update(Email)
+      .set({ isSend: true })
+      .execute();
+
+    if (whereStoped) {
+      return { done: data.affected - whereStoped.id, stoped: whereStoped };
+    }
+    return {
+      done: data.affected - whereStart.id,
+      startedFrom: whereStart,
+    };
   }
+  //!FIND OUT IF SULITION IS GOOD
 }

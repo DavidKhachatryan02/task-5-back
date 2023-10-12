@@ -10,4 +10,7 @@ export class Email {
 
   @Column({ default: false })
   isSend: boolean;
+
+  @Column({ nullable: true })
+  isStoped: boolean;
 }
