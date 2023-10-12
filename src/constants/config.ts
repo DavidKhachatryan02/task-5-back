@@ -5,7 +5,7 @@ import { Email } from 'src/kafka/entity/email.entity';
 export const TOPICS = { EMAIL: 'email' };
 
 export const CONSUMER_CONFIG: ConsumerSubscribeTopics = {
-  topics: ['email'],
+  topics: [TOPICS.EMAIL],
   fromBeginning: true,
 };
 
