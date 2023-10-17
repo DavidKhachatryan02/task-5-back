@@ -7,7 +7,7 @@ import {
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { DataSource, EntityManager, SelectQueryBuilder } from 'typeorm';
 import { Kafka } from 'kafkajs';
-import { CONSUMER_CONFIG, KAFKA_CONFIG, CONSUMER } from 'src/constants/config';
+import { CONSUMER_CONFIG, KAFKA_CONFIG, CONSUMER } from 'src/config';
 import { Email } from 'src/kafka/entity/email.entity';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class ConsumerService
   }
 
   async onApplicationBootstrap() {
-    // await this.emailRepository.clear(); //!clear this//
+    await this.emailRepository.clear(); //! to clear DB//
     await this.consumer.connect();
     await this.consumer.subscribe(CONSUMER_CONFIG);
     await this.consumer.run({
@@ -65,6 +65,7 @@ export class ConsumerService
   }
 
   async getData() {
+    console.time('DATAGET');
     const numberOfEmail = await this.emailRepository.count();
 
     let whereStart = await this.emailRepository.findOne({
@@ -85,18 +86,18 @@ export class ConsumerService
       whereStart = whereStoped;
     }
 
-    if (!whereStart) return { done: numberOfEmail };
+    if (!whereStart) return { total: numberOfEmail };
 
+    if (whereStoped) {
+      return { stoped: whereStoped }; //!maybe this must be not here
+    }
     const data = await this.updateQueryBuilder
       .skip(whereStart.id)
       .take(numberOfEmail - whereStart.id)
       .update(Email)
       .set({ isSend: true })
       .execute();
-
-    if (whereStoped) {
-      return { done: data.affected - whereStoped.id, stoped: whereStoped };
-    }
+    console.timeEnd('DATAGET');
     return {
       done: data.affected - whereStart.id,
       startedFrom: whereStart,
