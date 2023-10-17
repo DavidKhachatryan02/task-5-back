@@ -4,7 +4,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { Kafka, Message, Partitioners, Producer } from 'kafkajs';
-import { KAFKA_CONFIG } from 'src/config';
+import { KAFKA_CONFIG } from 'src/config/kafkaConfig';
 import { TOPICS } from 'src/constants';
 import { createEmailNumberDto } from './dto/emailNumber.dto';
 import { generateMassages } from 'src/utils';

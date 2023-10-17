@@ -7,7 +7,11 @@ import {
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { DataSource, EntityManager, SelectQueryBuilder } from 'typeorm';
 import { Kafka } from 'kafkajs';
-import { CONSUMER_CONFIG, KAFKA_CONFIG, CONSUMER } from 'src/config';
+import {
+  CONSUMER_CONFIG,
+  KAFKA_CONFIG,
+  CONSUMER,
+} from 'src/config/kafkaConfig';
 import { Email } from 'src/kafka/entity/email.entity';
 
 @Injectable()
