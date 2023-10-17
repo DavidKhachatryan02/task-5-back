@@ -69,7 +69,6 @@ export class ConsumerService
   }
 
   async getData() {
-    console.time('DATAGET');
     const numberOfEmail = await this.emailRepository.count();
 
     let whereStart = await this.emailRepository.findOne({
@@ -101,7 +100,6 @@ export class ConsumerService
       .update(Email)
       .set({ isSend: true })
       .execute();
-    console.timeEnd('DATAGET');
     return {
       done: data.affected - whereStart.id,
       startedFrom: whereStart,

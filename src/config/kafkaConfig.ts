@@ -1,5 +1,5 @@
 import { ConsumerConfig, ConsumerSubscribeTopics, KafkaConfig } from 'kafkajs';
-import { TOPICS } from '../constants';
+import { TOPICS } from 'src/constants';
 
 export const CONSUMER_CONFIG: ConsumerSubscribeTopics = {
   topics: [TOPICS.EMAIL],
@@ -8,7 +8,9 @@ export const CONSUMER_CONFIG: ConsumerSubscribeTopics = {
 
 export const KAFKA_CONFIG: KafkaConfig = {
   clientId: 'user',
-  brokers: ['localhost:9092'],
+  brokers: async () => {
+    return [process.env.KAFKA_PORT];
+  },
 };
 
 export const CONSUMER: ConsumerConfig = { groupId: 'emails', maxBytes: 2000 };
